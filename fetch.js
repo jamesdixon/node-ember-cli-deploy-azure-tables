@@ -3,6 +3,7 @@ var _defaults = require('lodash/object/defaults');
 
 var EmberCliDeployError = require('./errors/ember-cli-deploy-error');
 
+var azure = require('azure-storage');
 var azureTableService;
 
 var opts;
@@ -43,18 +44,20 @@ var fetchIndex = function(req, appName, connectionInfo, passedOpts) {
   function queryAzure(table, partitionKey, rowKey) {
     return new Promise(function(resolve, reject) {
       azureTableService.retrieveEntity(table, partitionKey, rowKey, function(error, result, response) {
+
         if(!result) {
           reject(new EmberCliDeployError("There's no " + rowKey + " revision.", true));
         }
         else if (error) {
           reject(new Error(error));
         }
-
-        // azure tables returns a goofy result with a content object containing another object with a key of
-        // '-', so need to grab the result from that
-        var key = Object.keys(result.content)[0];
-        var value = result.content[key];
-        resolve(value);
+        else {
+          // azure tables returns a goofy result with a content object containing another object with a key of
+          // '-', so need to grab the result from that
+          var key = Object.keys(result.content)[0];
+          var value = result.content[key];
+          resolve(value);
+        }
 
       });
     });

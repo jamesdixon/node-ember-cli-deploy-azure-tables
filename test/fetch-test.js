@@ -134,23 +134,23 @@ describe('fetch', function() {
 
     });
 
-    // it('removes special chars revisionQueryParam', function(done) {
-    //   var req = {
-    //     query: {
-    //       index_key: 'ab@*#!c(@)123'
-    //     }
-    //   };
-    //
-    //   azure.set('myapp:abc123', 'foo').then(function(){
-    //     fetchIndex(req, 'myapp').then(function() {
-    //       expect(azureSpy.calledWith('myapp:abc123')).to.be.true;
-    //       expect(azureSpy.calledWith('myapp:ab@*#!c(@)123')).to.be.false;
-    //       done();
-    //     }).catch(function(err) {
-    //       done(err);
-    //     });
-    //   });
-    // });
+    it('removes special chars revisionQueryParam', function(done) {
+      var req = {
+        query: {
+          index_key: 'ab@*#!c(@)123'
+        }
+      };
+
+      azure.set('myapp:abc123', 'foo').then(function(){
+        fetchIndex(req, 'myapp').then(function() {
+          expect(azureSpy.calledWith('myapp:abc123')).to.be.true;
+          expect(azureSpy.calledWith('myapp:ab@*#!c(@)123')).to.be.false;
+          done();
+        }).catch(function(err) {
+          done(err);
+        });
+      });
+    });
 
     it('fails the promise with a critical error if appName:current is not present', function(done) {
       azure.del('myapp:current').then(function(){
