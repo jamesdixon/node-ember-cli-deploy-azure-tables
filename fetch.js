@@ -54,13 +54,13 @@ var fetchIndex = function(req, appName, connectionInfo, passedOpts) {
         // '-', so need to grab the result from that
         var key = Object.keys(result.content)[0];
         var value = result.content[key];
-
         resolve(value);
+
       });
     });
   }
 
-  function retrieverowKey() {
+  function retrieveRowKey() {
     if (rowKey) {
       return Bluebird.resolve(rowKey);
     } else {
@@ -68,7 +68,7 @@ var fetchIndex = function(req, appName, connectionInfo, passedOpts) {
     }
   }
 
-  return retrieverowKey().then(function(result) {
+  return retrieveRowKey().then(function(result) {
     return queryAzure('emberdeploy', 'manifest', result);
   });
 };
