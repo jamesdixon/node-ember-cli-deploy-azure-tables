@@ -15,16 +15,21 @@ var AzureClientApi = testApi.AzureClientApi;
 
 var AzureApi = testApi.AzureApi;
 
+var queryAzure = testApi.queryAzure;
+
 var config = {
   accountName: 'test',
   accessKey: '934209jassadas'
 };
+
+var tableName = 'emberdeploy', partitionKey = 'manifest';
 
 describe('fetch', function() {
   var sandbox;
   before(function() {
     sandbox = sinon.sandbox.create();
     fetchIndex.__set__('azure', AzureApi);
+    fetchIndex.__set__('queryAzure', queryAzure)
   });
 
   afterEach(function() {
@@ -106,7 +111,7 @@ describe('fetch', function() {
     });
 
     beforeEach(function() {
-      azureSpy = sandbox.spy(azure, 'retrieveEntity');
+      azureSpy = sandbox.spy(queryAzure);
       _initialize(config);
     });
 
@@ -124,8 +129,8 @@ describe('fetch', function() {
 
       azure.set('myapp:abc123', 'foo').then(function(){
         fetchIndex(req, 'myapp', config).then(function() {
-          expect(azureSpy.calledWith('emberdeploy', 'manifest', 'myapp:abc123')).to.be.true;
-          expect(azureSpy.calledWith('emberdeploy', 'manifest', 'myapp:abc 123')).to.be.false;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:abc123')).to.be.true;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:abc 123')).to.be.false;
           done();
         }).catch(function(err) {
           done(err);
@@ -143,8 +148,8 @@ describe('fetch', function() {
 
       azure.set('myapp:abc123', 'foo').then(function(){
         fetchIndex(req, 'myapp').then(function() {
-          expect(azureSpy.calledWith('myapp:abc123')).to.be.true;
-          expect(azureSpy.calledWith('myapp:ab@*#!c(@)123')).to.be.false;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:abc123')).to.be.true;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:ab@*#!c(@)123')).to.be.false;
           done();
         }).catch(function(err) {
           done(err);
@@ -157,7 +162,7 @@ describe('fetch', function() {
         fetchIndex(basicReq, 'myapp').then(function() {
           done("Promise should not have resolved.");
         }).catch(function(err) {
-          expect(azureSpy.calledWith('myapp:current')).to.be.true;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:current')).to.be.true;
           expect(err.critical).to.be.true;
           done();
         });
@@ -171,8 +176,8 @@ describe('fetch', function() {
         fetchIndex(basicReq, 'myapp').then(function() {
           done("Promise should not have resolved.");
         }).catch(function(err) {
-          expect(azureSpy.calledWith('myapp:current')).to.be.true;
-          expect(azureSpy.calledWith('myapp:abc123')).to.be.true;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:current')).to.be.true;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:abc123')).to.be.true;
           expect(err.critical).to.be.true;
           done();
         });
@@ -189,7 +194,7 @@ describe('fetch', function() {
         fetchIndex(req, 'myapp').then(function() {
           done("Promise should not have resolved.");
         }).catch(function(err) {
-          expect(azureSpy.calledWith('myapp:abc123')).to.be.true;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:abc123')).to.be.true;
           expect(err.critical).to.be.false;
           done();
         });
@@ -203,8 +208,8 @@ describe('fetch', function() {
         azure.set('myapp:abc123', currentHtmlString),
       ]).then(function(){
         fetchIndex(basicReq, 'myapp').then(function(html) {
-          expect(azureSpy.calledWith('myapp:current')).to.be.true;
-          expect(azureSpy.calledWith('myapp:abc123')).to.be.true;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:current')).to.be.true;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:abc123')).to.be.true;
           expect(html).to.equal(currentHtmlString);
           done();
         }).catch(function(err) {
@@ -227,9 +232,9 @@ describe('fetch', function() {
         azure.set('myapp:def456', newDeployHtmlString)
       ]).then(function(){
         fetchIndex(req, 'myapp').then(function(html) {
-          expect(azureSpy.calledWith('myapp:current')).to.be.false;
-          expect(azureSpy.calledWith('myapp:abc123')).to.be.false;
-          expect(azureSpy.calledWith('myapp:def456')).to.be.true;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:current')).to.be.false;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:abc123')).to.be.false;
+          expect(azureSpy.calledWith(tableName, partitionKey, 'myapp:def456')).to.be.true;
           expect(html).to.equal(newDeployHtmlString);
           done();
         }).catch(function(err) {

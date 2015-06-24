@@ -2,9 +2,6 @@ var Bluebird = require('bluebird');
 
 var AzureClientApi = {
   _storage: {},
-  retrieveEntity: function(table, partitionKey, rowKey, callback) {
-    return Bluebird.resolve(this._storage[rowKey]);
-  },
   set: function(key, value){
     this._storage[key] = value;
     return Bluebird.resolve(value);
@@ -25,7 +22,13 @@ var AzureApi = {
   }
 };
 
+var queryAzure = function(table, partition, rowKey) {
+  console.log(AzureClientApi._storage[rowKey]);
+  return Bluebird.resolve(AzureClientApi._storage[rowKey]);
+}
+
 module.exports = {
   AzureClientApi: AzureClientApi,
-  AzureApi: AzureApi
+  AzureApi: AzureApi,
+  queryAzure: queryAzure
 };

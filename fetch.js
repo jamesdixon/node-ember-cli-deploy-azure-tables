@@ -28,6 +28,28 @@ var _initialize = function(connectionInfo, passedOpts) {
 
 };
 
+var queryAzure = function(table, partitionKey, rowKey) {
+  return new Promise(function(resolve, reject) {
+    azureTableService.retrieveEntity(table, partitionKey, rowKey, function(error, result, response) {
+
+      if(!result) {
+        reject(new EmberCliDeployError("There's no " + rowKey + " revision.", true));
+      }
+      else if (error) {
+        reject(new Error(error));
+      }
+      else {
+        // azure tables returns a goofy result with a content object containing another object with a key of
+        // '-', so need to grab the result from that
+        var key = Object.keys(result.content)[0];
+        var value = result.content[key];
+        resolve(value);
+      }
+
+    });
+  });
+}
+
 var fetchIndex = function(req, appName, connectionInfo, passedOpts) {
   if (!initialized) {
     _initialize(connectionInfo, passedOpts);
@@ -39,40 +61,24 @@ var fetchIndex = function(req, appName, connectionInfo, passedOpts) {
     rowKey = appName + ':' + queryKey;
   }
 
-  var customrowKeyWasSpecified = !!rowKey;
-
-  function queryAzure(table, partitionKey, rowKey) {
-    return new Promise(function(resolve, reject) {
-      azureTableService.retrieveEntity(table, partitionKey, rowKey, function(error, result, response) {
-
-        if(!result) {
-          reject(new EmberCliDeployError("There's no " + rowKey + " revision.", true));
-        }
-        else if (error) {
-          reject(new Error(error));
-        }
-        else {
-          // azure tables returns a goofy result with a content object containing another object with a key of
-          // '-', so need to grab the result from that
-          var key = Object.keys(result.content)[0];
-          var value = result.content[key];
-          resolve(value);
-        }
-
-      });
-    });
-  }
-
   function retrieveRowKey() {
     if (rowKey) {
       return Bluebird.resolve(rowKey);
     } else {
-      return queryAzure('emberdeploy', 'manifest', appName + ":current");
+      return queryAzure('emberdeploy', 'manifest', appName + ":current").then(function(result) {
+        return result;
+      }).catch(function(err) {
+        throw err;
+      });
     }
   }
 
-  return retrieveRowKey().then(function(result) {
-    return queryAzure('emberdeploy', 'manifest', result);
+  return retrieveRowKey().then(function(rowKey) {
+    return queryAzure('emberdeploy', 'manifest', rowKey);
+  }).then(function(html) {
+      return html;
+  }).catch(function(err) {
+      throw err;
   });
 };
 
