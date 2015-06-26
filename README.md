@@ -1,6 +1,8 @@
 # node-ember-cli-deploy-azure-tables
 ExpressJS middleware to fetch the current (or specified) revision of your Ember App from Azure Tables deployed by [ember-cli-deploy](https://github.com/ember-cli/ember-cli-deploy).
 
+Looking for an Ember CLI addon to enable deployment to Azure? Check out the excellent [ember-deploy-azure](https://github.com/duizendnegen/ember-deploy-azure/) addon by [duizendnegen](https://github.com/duizendnegen/)!
+
 ## Credit
 This is a modified version of [Ben Limmer's](https://github.com/blimmer) excellent [node-ember-cli-deploy-redis](https://github.com/blimmer/node-ember-cli-deploy-redis) package. Thanks, Ben!
 
