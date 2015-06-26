@@ -3,17 +3,35 @@
   "version": "0.0.1",
   "description": "An ExpressJS middleware to serve EmberJS apps deployed by ember-cli-deploy and using Azure Table Storage",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jamesdixon/node-ember-cli-deploy-azure-tables.git"
+  },
   "keywords": [
     "ember-cli-deploy",
     "express",
     "azure",
     "azure table storage"
   ],
+  "scripts": {
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha ./test/**/*-test.js"
+  },
   "author": "James Dixon <jim.w.dixon@gmail.com>",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jamesdixon/node-ember-cli-deploy-azure-tables/issues"
+  },
+  "homepage": "https://github.com/jamesdixon/node-ember-cli-deploy-azure-tables",
   "dependencies": {
     "azure-storage": "0.4.5",
     "bluebird": "^2.9.25",
     "lodash": "^3.9.1"
+  },
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "mocha": "^2.2.5",
+    "node-mocks-http": "^1.4.2",
+    "rewire": "^2.3.3",
+    "sinon": "^1.14.1"
   }
 }
