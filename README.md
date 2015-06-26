@@ -2,7 +2,7 @@
 ExpressJS middleware to fetch the current (or specified) revision of your Ember App from Azure Tables deployed by [ember-cli-deploy](https://github.com/ember-cli/ember-cli-deploy).
 
 ## Credit
-This is a modified version of [Ben Limmer's]((https://github.com/blimmer) excellent [node-ember-cli-deploy-redis](https://github.com/blimmer/node-ember-cli-deploy-redis) package. Thanks, Ben!
+This is a modified version of [Ben Limmer's](https://github.com/blimmer) excellent [node-ember-cli-deploy-redis](https://github.com/blimmer/node-ember-cli-deploy-redis) package. Thanks, Ben!
 
 ## Usage
 There are two ways of using the package:
