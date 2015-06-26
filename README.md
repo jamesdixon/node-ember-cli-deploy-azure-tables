@@ -47,6 +47,12 @@ app.get('/', function(req, res) {
   });
 });
 ```
+### Fetching a Specific Revision
+You can  fetch a specific revision by using the `index_key` query param. Example:
+
+```
+http://www.coolio.com?index_key=abc123
+```
 
 ## Contributing
 Comments/PRs/Issues are welcome!
