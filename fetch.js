@@ -52,7 +52,7 @@ var fetchIndex = function(req, appName, connectionInfo, passedOpts) {
   }
 
   function queryAzure(table, partitionKey, rowKey) {
-    return new Promise(function(resolve, reject) {
+    return new Bluebird(function(resolve, reject) {
       azureTableService.retrieveEntity(table, partitionKey, rowKey, function(error, result, response) {
 
         if(!result) {
