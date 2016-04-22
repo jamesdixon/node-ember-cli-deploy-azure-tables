@@ -8,13 +8,14 @@ const _defaultsDeep = require('lodash/defaultsDeep');
 
 // default options
 const _defaultOpts = {
+  azureTableName: 'emberdeploy',
   revisionQueryParam: 'index_key',
   memoize: false,
   memoizeOpts: {
     maxAge:   5000, // ms
     preFetch: true,
     max:      4,    // a sane default (current pointer, current html and two indexkeys in cache)
-  },
+  }
 };
 
 let opts;
@@ -78,7 +79,7 @@ const fetchIndex = (req, appName, connectionInfo, passedOpts) => {
     if (rowKey) {
       return Promise.resolve(rowKey);
     } else {
-      return queryAzure('emberdeploy', 'manifest', appName + ':current')
+      return queryAzure(opts.azureTableName, 'manifest', appName + ':current')
         .then((result) => result)
         .catch((err) => {
           throw err;
@@ -115,7 +116,7 @@ const fetchIndex = (req, appName, connectionInfo, passedOpts) => {
    *  return the active revision's content.
    */
   return retrieveRowKey()
-    .then((rowKey) => queryAzure('emberdeploy', 'manifest', rowKey))
+    .then((rowKey) => queryAzure(opts.azureTableName, 'manifest', rowKey))
     .then((html) => html);
 };
 

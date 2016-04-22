@@ -53,6 +53,8 @@ http://www.coolio.com?index_key=abc123
 * `options` (optional) - a hash of params to override [the defaults](https://github.com/jamesdixon/node-ember-cli-deploy-azure-tables/blob/master/README.md#options)
 
 ### options
+* `azureTableName` (defaults to `emberdeploy`)
+   overrides the default table name from which to fetch
 * `revisionQueryParam` (defaults to `index_key`)  
    the query parameter to specify a revision (e.g. `http://example.org/?index_key=abc123`). the key will be automatically prefaced with your `keyPrefix` for security.
 * `memoize` (defaults to `false`)
